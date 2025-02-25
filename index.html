@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altcoin Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/9de09d3c34.js" crossorigin="anonymous"></script>
+</head>
+
+<style>
+/* সাধারণ স্টাইল */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light Mode ডিফল্ট স্টাইল */
+body.light-mode {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Dark Mode স্টাইল */
+body.dark-mode {
+    background-color: #171616;
+    color: #ffffff;
+}
+
+.container {
+    background: #FFFFFF;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    width: 90%;
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode .container {
+    background: #242424;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode h1 {
+    color: #00d1b2;
+}
+
+#status {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #e74c3c;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode #status {
+    color: #ffdd57;
+}
+
+/* টেবিল স্টাইল */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode table {
+    background: #302F2F;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+th, td {
+    padding: 15px 20px;
+    text-align: center;
+}
+
+th {
+    background-color: #3498db;
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode th {
+    background-color: #00d1b2;
+}
+
+td {
+    border-bottom: 1px solid #ecf0f1;
+    color: #2c3e50;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode td {
+    border-bottom: 1px solid #4a4a6a;
+    color: #ffffff;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: #f1f5f9;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode tr:hover {
+    background-color: #4a4a6a;
+}
+
+/* Dark Mode টগল বাটন */
+#dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #2c3e50;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode #dark-mode-toggle {
+    color: #ffffff;
+}
+
+/* স্ক্রলবার স্টাইল */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ecf0f1;
+    border-radius: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #2a2a40;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #00d1b2;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #00b89c;
+}
+</style>
+
+
+<body>
+    <div class="container">
+        <h1>Altcoin Tracker</h1>
+
+        <div id="status">Finding...</div>
+        <table id="coin-table">
+            <thead>
+                <tr>
+                    <th>Coin</th>
+                    <th>Short</th>
+                    <th>LONG</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ডেটা এখানে লোড হবে -->
+            </tbody>
+        </table>
+    </div>
+    <script> 
+    
+// ব্ল্যাকলিস্টেড কয়েন (এই কয়েনগুলি শো হবে না)
+const blacklistedCoins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT','XRPUSDT','LTCUSDT'];
+
+// Binance API থেকে সমস্ত Futures মার্কেট সিম্বল ফেচ করার ফাংশন
+async function fetchFuturesSymbols() {
+  const url = 'https://fapi.binance.com/fapi/v1/exchangeInfo';
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const symbols = data.symbols
+      .filter(symbol => symbol.contractType === 'PERPETUAL') // শুধুমাত্র PERPETUAL Futures
+      .map(symbol => symbol.symbol);
+    return symbols;
+  } catch (error) {
+    console.error('API not load:', error);
+    return null;
+  }
+}
+
+// Binance API থেকে ক্যান্ডলস্টিক ডেটা ফেচ করার ফাংশন
+async function fetchCandlestickData(symbol, interval = '1m', limit = 5) {
+  const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching data for ${symbol}:`, error);
+    return null;
+  }
+}
+
+// Higher High এবং Lower Low চেক করার ফাংশন
+function checkHigherHighLowerLow(candles) {
+  let higherHigh = true;
+  let lowerLow = true;
+
+  for (let i = 1; i < candles.length; i++) {
+    if (candles[i][2] <= candles[i - 1][2]) { // Higher High চেক
+      higherHigh = false;
+    }
+    if (candles[i][3] >= candles[i - 1][3]) { // Lower Low চেক
+      lowerLow = false;
+    }
+  }
+
+  return { higherHigh, lowerLow };
+}
+
+// Mexc অ্যাপে চার্ট ওপেন করার ফাংশন
+function openMexcAppChart(symbol) {
+  // Mexc অ্যাপের Deep Link ফরম্যাট
+  const baseUrl = 'mexc://exchange'; // Mexc অ্যাপের Deep Link
+  const coinPair = symbol.replace('USDT', '_USDT'); // Binance সিম্বলকে Mexc ফরম্যাটে রূপান্তর করুন
+  const url = `${baseUrl}/${coinPair}`;
+
+  // Deep Link ওপেন করার চেষ্টা করুন
+  window.location.href = url;
+
+  // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে Mexc ওয়েবসাইটে রিডাইরেক্ট করুন
+  setTimeout(() => {
+    window.open(`https://futures.mexc.com/exchange/${coinPair}`, '_blank');
+  }, 500); // 500ms পরে চেক করুন
+}
+
+// টেবিলে নতুন কয়েন যোগ করার ফাংশন
+function addCoinToTable(coin) {
+  const tableBody = document.querySelector('#coin-table tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `
+        <td>${coin.symbol}</td>
+        <td>${coin.higherHigh ? 'Yes' : 'No'}</td>
+        <td>${coin.lowerLow ? 'Yes' : 'No'}</td>
+    `;
+  tableBody.appendChild(row);
+
+  // ডাবল ক্লিক ইভেন্ট যোগ করুন
+  row.addEventListener('dblclick', () => {
+    openMexcAppChart(coin.symbol);
+  });
+}
+
+// সর্বোচ্চ ১৫টি কয়েন শো করার ফাংশন
+let displayedCoins = 0;
+const maxCoins = 5;
+
+async function fetchAllCoins() {
+  const status = document.getElementById('status');
+  status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> '; // Font Awesome আইকন
+
+  const symbols = await fetchFuturesSymbols();
+  if (!symbols) {
+    status.innerHTML = 'No Internet';
+    return;
+  }
+
+  for (const symbol of symbols) {
+    if (displayedCoins >= maxCoins) {
+      status.innerHTML = '';
+      break; // ১৫টি কয়েন শো হলে লুপ থামান
+    }
+
+    // ব্ল্যাকলিস্টেড কয়েন চেক করুন
+    if (blacklistedCoins.includes(symbol)) {
+      continue; // ব্ল্যাকলিস্টেড কয়েন স্কিপ করুন
+    }
+
+    try {
+      const candles = await fetchCandlestickData(symbol);
+      if (!candles) continue;
+
+      const { higherHigh, lowerLow } = checkHigherHighLowerLow(candles);
+      if (higherHigh || lowerLow) {
+        addCoinToTable({ symbol, higherHigh, lowerLow });
+        displayedCoins++;
+      }
+    } catch (error) {
+      console.error(`Error processing ${symbol}:`, error);
+    }
+  }
+
+  if (displayedCoins === 0) {
+    status.innerHTML = 'No coin';
+  } else if (displayedCoins < maxCoins) {
+    status.innerHTML = '';
+  }
+}
+
+// টেবিল ক্লিয়ার করার ফাংশন
+function clearTable() {
+  const tableBody = document.querySelector('#coin-table tbody');
+  tableBody.innerHTML = '';
+  displayedCoins = 0; // কাউন্টার রিসেট করুন
+}
+
+// প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
+async function updateData() {
+  clearTable(); // টেবিল ক্লিয়ার করুন
+  await fetchAllCoins(); // নতুন ডেটা ফেচ করুন
+}
+
+// পেজ লোড হওয়ার সময় ডেটা ফেচ করুন
+document.addEventListener('DOMContentLoaded', updateData);
+
+// প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
+setInterval(updateData, 606000);
+</script>
+
+
+
+
+<script>
+  // Dark Mode টগল ফাংশন
+function toggleDarkMode() {
+    const body = document.body;
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+    body.classList.toggle('dark-mode');
+
+    // আইকন চেঞ্জ করুন
+    if (body.classList.contains('dark-mode')) {
+        darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
+    } else {
+        darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+    }
+
+    // লোকাল স্টোরেজে Dark Mode স্টেট সেভ করুন
+    localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+}
+
+// পেজ লোড হওয়ার সময় Dark Mode স্টেট চেক করুন
+function checkDarkMode() {
+    const body = document.body;
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+
+    if (darkMode) {
+        body.classList.add('dark-mode');
+        darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
+    } else {
+        darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+    }
+}
+
+// Dark Mode টগল বাটন যোগ করুন
+const darkModeToggleButton = document.createElement('button');
+darkModeToggleButton.id = 'dark-mode-toggle';
+darkModeToggleButton.innerHTML = '🌙'; // ডিফল্ট আইকন
+darkModeToggleButton.addEventListener('click', toggleDarkMode);
+document.body.appendChild(darkModeToggleButton);
+
+// পেজ লোড হওয়ার সময় Dark Mode স্টেট চেক করুন
+document.addEventListener('DOMContentLoaded', checkDarkMode);
+</script>
+
+
+</body>
+</html>
