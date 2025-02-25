@@ -241,7 +241,7 @@ body.dark-mode select:focus {
 
 <body>
     <div class="container">
-        <h1>Altcoin Tracker</h1>
+        <h1>Altcoin </h1>
 
 <!-- Time frame সিলেক্ট করার জন্য ড্রপডাউন মেনু -->
 <div>
@@ -324,20 +324,25 @@ function checkHigherHighLowerLow(candles) {
 
 // TradingView অ্যাপে চার্ট ওপেন করার ফাংশন
 function openTradingViewAppChart(symbol) {
+  // শুধুমাত্র USDT পেয়ার চেক করুন
+  if (!symbol.endsWith('USDT')) {
+    console.error('শুধুমাত্র USDT পেয়ার সমর্থিত।');
+    return;
+  }
+
   // TradingView অ্যাপের Deep Link ফরম্যাট
   const baseUrl = 'tradingview://'; // TradingView অ্যাপের Deep Link
-  const coinPair = symbol.replace('USDT', 'USD'); // Binance সিম্বলকে TradingView ফরম্যাটে রূপান্তর করুন
-  const url = `${baseUrl}chart/?symbol=BINANCE:${coinPair}`;
+  const coinPair = symbol.replace('_', ''); // MEXC সিম্বল ফরম্যাট (BTC_USDT -> BTCUSDT)
+  const url = `${baseUrl}chart/?symbol=MEXC:${coinPair}.P`; // 'P' যোগ করুন Perpetual Futures এর জন্য
 
-  // Deep Link ওপেন করার চেষ্টা করুন
+  // Deep Link ওপেন করার চেষ্টা করুন (বর্তমান ট্যাবে)
   window.location.href = url;
 
-  // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে TradingView ওয়েবসাইটে রিডাইরেক্ট করুন
+  // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে TradingView ওয়েবসাইটে রিডাইরেক্ট করুন (বর্তমান ট্যাবে)
   setTimeout(() => {
-    window.open(`https://www.tradingview.com/chart/?symbol=BINANCE:${coinPair}`, '_blank');
+    window.location.href = `https://www.tradingview.com/chart/?symbol=MEXC:${coinPair}.P`;
   }, 500); // 500ms পরে চেক করুন
 }
-
 // টেবিলে নতুন কয়েন যোগ করার ফাংশন
 function addCoinToTable(coin) {
   const tableBody = document.querySelector('#coin-table tbody');
