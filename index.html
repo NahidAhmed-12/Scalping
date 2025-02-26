@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://kit.fontawesome.com/9de09d3c34.js" crossorigin="anonymous"></script>
 </head>
-
 <style>
-/* সাধারণ স্টাইল */
+  /* 🌟 বেসিক বডি স্টাইল */
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -20,152 +19,190 @@ body {
     align-items: center;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
-      -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-/* Light Mode ডিফল্ট স্টাইল */
+/* 🟢 লাইট মোড (White mode) */
 body.light-mode {
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: #ffffff; /* সাদা ব্যাকগ্রাউন্ড */
+    color: #333333; /* সাদার সাথে গা dark কালো টেক্সট */
 }
 
-/* Dark Mode স্টাইল */
+/* 🟣 ডার্ক মোড */
 body.dark-mode {
-    background-color: #171616;
+    background-color: #121212; /* ডার্ক ব্যাকগ্রাউন্ড */
     color: #ffffff;
 }
 
+/* 🟢 কন্টেইনার ডিজাইন */
 .container {
-    background: #FFFFFF;
+    background: #ffffff; /* সাদা ব্যাকগ্রাউন্ড */
     padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); /* লাইট শ্যাডো */
     max-width: 1200px;
     width: 90%;
     text-align: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* 🌑 ডার্ক মোড কন্টেইনার */
 body.dark-mode .container {
-    background: #242424;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background: #1E1E2F; /* ডিপ ব্লু সলিড */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6); /* গা dark শ্যাডো */
 }
 
+/* 🟣 হেডিং স্টাইল */
 h1 {
     font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: #2c3e50;
     font-weight: 700;
+    color: #333333; /* সাদা মোডে গা dark কালো টেক্সট */
     transition: color 0.3s ease;
 }
 
 body.dark-mode h1 {
-    color: #00d1b2;
+    color: #FF5700; /* ডার্ক মোডে গোল্ডেন */
 }
 
+/* 🔴 স্ট্যাটাস মেসেজ */
 #status {
+  margin-top: 1px;
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 20px;
-    color: #e74c3c;
+    color: #FF5733;
+    top: 10px;
+    position: relative;
     transition: color 0.3s ease;
 }
 
 body.dark-mode #status {
-    color: #ffdd57;
+    color: #FFD700;
 }
 
-/* টেবিল স্টাইল */
+/* 🔵 টেবিল স্টাইল */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: #ffffff;
-    border-radius: 12px;
+    background: #A61010; /* সাদা টেবিল */
+    border-radius: 7px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body.dark-mode table {
-    background: #302F2F;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background: #1E1E2F; /* টেবিলের ব্যাকগ্রাউন্ড */
 }
 
 th, td {
-    padding: 15px 20px;
+    padding: 15px;
     text-align: center;
+    border-bottom: 1px solid #696969;
 }
 
 th {
-    background-color: #3498db;
-    color: #ffffff;
-    font-weight: 600;
+    background: #3498db; /* সাদা মোডে ব্লু */
+    color: white;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
 }
 
 body.dark-mode th {
-    background-color: #00d1b2;
+    background: #FF5733; /* ডার্ক মোডে লাল */
 }
 
 td {
-    border-bottom: 1px solid #ecf0f1;
-    color: #2c3e50;
-    transition: border-color 0.3s ease, color 0.3s ease;
+    color: #333333; /* সাদা মোডে গা dark কালো টেক্সট */
 }
 
 body.dark-mode td {
-    border-bottom: 1px solid #4a4a6a;
-    color: #ffffff;
-}
-
-tr:last-child td {
-    border-bottom: none;
+    color: #dddddd; /* ডার্ক মোডে হালকা সাদা */
 }
 
 tr:hover {
-    background-color: #f1f5f9;
-    transition: background-color 0.3s ease;
+    background: #ecf0f1;
 }
 
 body.dark-mode tr:hover {
-    background-color: #4a4a6a;
+    background: #55575F;
 }
 
-/* Dark Mode টগল বাটন */
+/* 🌙 ডার্ক মোড টগল বাটন */
 #dark-mode-toggle {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: none;
+    background: #FF5733;
     border: none;
+    padding: 10px 15px;
     cursor: pointer;
-    font-size: 24px;
-    color: #2c3e50;
-    transition: color 0.3s ease;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
 }
 
-body.dark-mode #dark-mode-toggle {
-    color: #ffffff;
+#dark-mode-toggle:hover {
+    background: #C70039; /* গাঢ় লাল */
 }
 
-/* স্ক্রলবার স্টাইল */
+/* 🟢 বাটন স্টাইল */
+button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: #3498DB;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #2980B9;
+}
+
+/* 🟣 ড্রপডাউন স্টাইল */
+select {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 7px;
+    border: 2px solid #ccc;
+    background: #ffffff;
+    color: #1A1818;
+    width: 250px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode select {
+    background: #1E1E2F; /* ডার্ক মোডে ব্যাকগ্রাউন্ড পরিবর্তন */
+    border-color: #FF5F00;
+    color: #E3DCDC;
+    outline: none;
+}
+
+select:hover {
+    border-color: #FFD700;
+    background-color: #ecf0f1;
+}
+
+select:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+/* 🟡 স্ক্রলবার ডিজাইন */
 ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #ecf0f1;
-    border-radius: 10px;
-}
-
-body.dark-mode ::-webkit-scrollbar-track {
-    background: #2a2a40;
+    background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -173,90 +210,32 @@ body.dark-mode ::-webkit-scrollbar-track {
     border-radius: 10px;
 }
 
-body.dark-mode ::-webkit-scrollbar-thumb {
-    background: #00d1b2;
-}
-
 ::-webkit-scrollbar-thumb:hover {
     background: #2980b9;
 }
 
-body.dark-mode ::-webkit-scrollbar-thumb:hover {
-    background: #00b89c;
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #FFD700;
 }
 
-
-/* Time frame সিলেক্ট করার জন্য ড্রপডাউন মেনুর স্টাইল */
-div {
-    margin-bottom: 20px;
-}
-
-label {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #2c3e50;
-    margin-right: 10px;
-}
-
-body.dark-mode label {
-    color: #ffffff;
-}
-
-select {
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 2px solid #ccc;
-  margin-bottom: 25px;
-  width: 250px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-  margin-left: -10px;
-  outline: none;
-}
-select:hover {
-    border-color: #2980b9;
-    background-color: #f1f5f9;
-}
-
-select:focus {
-    border-color: #00d1b2;
-    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
-}
-
-body.dark-mode select {
-    background-color: #242424;
-    color: #ffffff;
-    border-color: #00d1b2;
-}
-
-body.dark-mode select:hover {
-    background-color: #4A4A6A;
-    border-color: #00b89c;
-}
-
-body.dark-mode select:focus {
-    border-color: #00D1B2;
-    box-shadow: 0 0 8px rgba(0, 209, 178, 0.5);
-}
 </style>
-
 
 <body>
     <div class="container">
         <h1>Altcoin </h1>
 
-<!-- Time frame সিলেক্ট করার জন্য ড্রপডাউন মেনু -->
-<div>
-  <label for="timeframe"></label>
-  <select id="timeframe">
-    <option value="1m">1 Minute</option>
-    <option value="5m">5 Minutes</option>
-    <option value="15m">15 Minutes</option>
-    <option value="1h">1 Hour</option>
-    <option value="4h">4 Hours</option>
-    <option value="1d">1 Day</option>
-  </select>
-</div>
+        <!-- Time frame সিলেক্ট করার জন্য ড্রপডাউন মেনু -->
+        <div>
+            <label for="timeframe"></label>
+            <select id="timeframe">
+                <option value="1m">1 Minute</option>
+                <option value="5m">5 Minutes</option>
+                <option value="15m">15 Minutes</option>
+                <option value="1h">1 Hour</option>
+                <option value="4h">4 Hours</option>
+
+            </select>
+        </div>
 
         <div id="status">Finding...</div>
         <table id="coin-table">
@@ -272,11 +251,10 @@ body.dark-mode select:focus {
             </tbody>
         </table>
     </div>
+    <script> 
     
-    
-    <script>
 // ব্ল্যাকলিস্টেড কয়েন (এই কয়েনগুলি শো হবে না)
-const blacklistedCoins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT', 'LTCUSDT'];
+const blacklistedCoins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT','XRPUSDT','LTCUSDT'];
 
 // Binance API থেকে সমস্ত Futures মার্কেট সিম্বল ফেচ করার ফাংশন
 async function fetchFuturesSymbols() {
@@ -324,27 +302,22 @@ function checkHigherHighLowerLow(candles) {
   return { higherHigh, lowerLow };
 }
 
-// TradingView অ্যাপে চার্ট ওপেন করার ফাংশন
-function openTradingViewAppChart(symbol) {
-  // শুধুমাত্র USDT পেয়ার চেক করুন
-  if (!symbol.endsWith('USDT')) {
-    console.error('শুধুমাত্র USDT পেয়ার সমর্থিত।');
-    return;
-  }
+// Mexc অ্যাপে চার্ট ওপেন করার ফাংশন
+function openMexcAppChart(symbol) {
+  // Mexc অ্যাপের Deep Link ফরম্যাট
+  const baseUrl = 'mexc://exchange'; // Mexc অ্যাপের Deep Link
+  const coinPair = symbol.replace('USDT', '_USDT'); // Binance সিম্বলকে Mexc ফরম্যাটে রূপান্তর করুন
+  const url = `${baseUrl}/${coinPair}`;
 
-  // TradingView অ্যাপের Deep Link ফরম্যাট
-  const baseUrl = 'tradingview://'; // TradingView অ্যাপের Deep Link
-  const coinPair = symbol.replace('_', ''); // MEXC সিম্বল ফরম্যাট (BTC_USDT -> BTCUSDT)
-  const url = `${baseUrl}chart/?symbol=MEXC:${coinPair}.P`; // 'P' যোগ করুন Perpetual Futures এর জন্য
-
-  // Deep Link ওপেন করার চেষ্টা করুন (বর্তমান ট্যাবে)
+  // Deep Link ওপেন করার চেষ্টা করুন
   window.location.href = url;
 
-  // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে TradingView ওয়েবসাইটে রিডাইরেক্ট করুন (বর্তমান ট্যাবে)
+  // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে Mexc ওয়েবসাইটে রিডাইরেক্ট করুন
   setTimeout(() => {
-    window.location.href = `https://www.tradingview.com/chart/?symbol=MEXC:${coinPair}.P`;
+    window.open(`https://futures.mexc.com/exchange/${coinPair}`, '_blank');
   }, 500); // 500ms পরে চেক করুন
 }
+
 // টেবিলে নতুন কয়েন যোগ করার ফাংশন
 function addCoinToTable(coin) {
   const tableBody = document.querySelector('#coin-table tbody');
@@ -358,7 +331,7 @@ function addCoinToTable(coin) {
 
   // ডাবল ক্লিক ইভেন্ট যোগ করুন
   row.addEventListener('dblclick', () => {
-    openTradingViewAppChart(coin.symbol);
+    openMexcAppChart(coin.symbol);
   });
 }
 
@@ -376,6 +349,9 @@ async function fetchAllCoins() {
     return;
   }
 
+  // Time frame সিলেক্ট করুন
+  const timeframe = document.getElementById('timeframe').value;
+
   for (const symbol of symbols) {
     if (displayedCoins >= maxCoins) {
       status.innerHTML = '';
@@ -388,7 +364,7 @@ async function fetchAllCoins() {
     }
 
     try {
-      const candles = await fetchCandlestickData(symbol);
+      const candles = await fetchCandlestickData(symbol, timeframe);
       if (!candles) continue;
 
       const { higherHigh, lowerLow } = checkHigherHighLowerLow(candles);
@@ -424,56 +400,57 @@ async function updateData() {
 // পেজ লোড হওয়ার সময় ডেটা ফেচ করুন
 document.addEventListener('DOMContentLoaded', updateData);
 
+// Time frame চেঞ্জ হলে ডেটা আপডেট করুন
+document.getElementById('timeframe').addEventListener('change', updateData);
+
 // প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
 setInterval(updateData, 300000);
+</script>
 
-// Dark Mode টগল ফাংশন
-function toggleDarkMode() {
-  const body = document.body;
-  const darkModeToggle = document.getElementById('dark-mode-toggle');
+<script>
+    // Dark Mode টগল ফাংশন
+  function toggleDarkMode() {
+    const body = document.body;
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-  body.classList.toggle('dark-mode');
+    body.classList.toggle('dark-mode');
 
-  // আইকন চেঞ্জ করুন
-  if (body.classList.contains('dark-mode')) {
-    darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
-  } else {
-    darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+    // আইকন চেঞ্জ করুন
+    if (body.classList.contains('dark-mode')) {
+      darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
+    } else {
+      darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+    }
+
+    // লোকাল স্টোরেজে Dark Mode স্টেট সেভ করুন
+    localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
   }
 
-  // লোকাল স্টোরেজে Dark Mode স্টেট সেভ করুন
-  localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-}
+  // পেজ লোড হওয়ার সময় Dark Mode স্টেট চেক করুন
+  function checkDarkMode() {
+    const body = document.body;
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-// পেজ লোড হওয়ার সময় Dark Mode স্টেট চেক করুন
-function checkDarkMode() {
-  const body = document.body;
-  const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const darkMode = localStorage.getItem('darkMode') === 'true';
 
-  const darkMode = localStorage.getItem('darkMode') === 'true';
-
-  if (darkMode) {
-    body.classList.add('dark-mode');
-    darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
-  } else {
-    darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+    if (darkMode) {
+      body.classList.add('dark-mode');
+      darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
+    } else {
+      darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+    }
   }
-}
 
-// Dark Mode টগল বাটন যোগ করুন
-const darkModeToggleButton = document.createElement('button');
-darkModeToggleButton.id = 'dark-mode-toggle';
-darkModeToggleButton.innerHTML = '🌙'; // ডিফল্ট আইকন
-darkModeToggleButton.addEventListener('click', toggleDarkMode);
-document.body.appendChild(darkModeToggleButton);
+  // Dark Mode টগল বাটন যোগ করুন
+  const darkModeToggleButton = document.createElement('button');
+  darkModeToggleButton.id = 'dark-mode-toggle';
+  darkModeToggleButton.innerHTML = '🌙'; // ডিফল্ট আইকন
+  darkModeToggleButton.addEventListener('click', toggleDarkMode);
+  document.body.appendChild(darkModeToggleButton);
 
-// পেজ লোড হওয়ার সময় Dark Mode স্টেট চেক করুন
-document.addEventListener('DOMContentLoaded', checkDarkMode);
-    </script>
-    
-    
-    
-
+  // পেজ লোড হওয়ার সময় Dark Mode স্টেট চেক করুন
+  document.addEventListener('DOMContentLoaded', checkDarkMode);
+</script>
 </body>
 
 </html>
