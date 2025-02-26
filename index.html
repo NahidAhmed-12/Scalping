@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="a-minimalist-and-modern-favicon-for-a-cr_Ms5q_iSdSreCTljV5azHsA_cIH71f1XQda07kqUyiEPtg.jpeg">
+    <link rel="shortcut icon" href="a-minimalist-and-modern-favicon-for-a-cr_Ms5q_iSdSreCTljV5azHsA_cIH71f1XQda07kqUyiEPtg.jpeg">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Altcoin Tracker</title>
     <link rel="stylesheet" href="styles.css">
@@ -75,6 +78,7 @@ body.dark-mode h1 {
     margin-bottom: 20px;
     color: #FF5733;
     top: 10px;
+    
     position: relative;
     transition: color 0.3s ease;
 }
@@ -88,7 +92,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: #A61010; /* সাদা টেবিল */
+    background: #FAFAFA; /* সাদা টেবিল */
     border-radius: 7px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -146,9 +150,7 @@ body.dark-mode tr:hover {
     transition: all 0.3s ease-in-out;
 }
 
-#dark-mode-toggle:hover {
-    background: #C70039; /* গাঢ় লাল */
-}
+
 
 /* 🟢 বাটন স্টাইল */
 button {
@@ -251,164 +253,167 @@ body.dark-mode ::-webkit-scrollbar-thumb {
             </tbody>
         </table>
     </div>
-    <script> 
-    
-// ব্ল্যাকলিস্টেড কয়েন (এই কয়েনগুলি শো হবে না)
-const blacklistedCoins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT','XRPUSDT','LTCUSDT'];
-
-// Binance API থেকে সমস্ত Futures মার্কেট সিম্বল ফেচ করার ফাংশন
-async function fetchFuturesSymbols() {
-  const url = 'https://fapi.binance.com/fapi/v1/exchangeInfo';
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    const symbols = data.symbols
-      .filter(symbol => symbol.contractType === 'PERPETUAL') // শুধুমাত্র PERPETUAL Futures
-      .map(symbol => symbol.symbol);
-    return symbols;
-  } catch (error) {
-    console.error('API not load:', error);
-    return null;
-  }
-}
-
-// Binance API থেকে ক্যান্ডলস্টিক ডেটা ফেচ করার ফাংশন
-async function fetchCandlestickData(symbol, interval = '1m', limit = 5) {
-  const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(`Error fetching data for ${symbol}:`, error);
-    return null;
-  }
-}
-
-// Higher High এবং Lower Low চেক করার ফাংশন
-function checkHigherHighLowerLow(candles) {
-  let higherHigh = true;
-  let lowerLow = true;
-
-  for (let i = 1; i < candles.length; i++) {
-    if (candles[i][2] <= candles[i - 1][2]) { // Higher High চেক
-      higherHigh = false;
-    }
-    if (candles[i][3] >= candles[i - 1][3]) { // Lower Low চেক
-      lowerLow = false;
-    }
-  }
-
-  return { higherHigh, lowerLow };
-}
-
-// Mexc অ্যাপে চার্ট ওপেন করার ফাংশন
-function openMexcAppChart(symbol) {
-  // Mexc অ্যাপের Deep Link ফরম্যাট
-  const baseUrl = 'mexc://exchange'; // Mexc অ্যাপের Deep Link
-  const coinPair = symbol.replace('USDT', '_USDT'); // Binance সিম্বলকে Mexc ফরম্যাটে রূপান্তর করুন
-  const url = `${baseUrl}/${coinPair}`;
-
-  // Deep Link ওপেন করার চেষ্টা করুন
-  window.location.href = url;
-
-  // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে Mexc ওয়েবসাইটে রিডাইরেক্ট করুন
-  setTimeout(() => {
-    window.open(`https://futures.mexc.com/exchange/${coinPair}`, '_blank');
-  }, 500); // 500ms পরে চেক করুন
-}
-
-// টেবিলে নতুন কয়েন যোগ করার ফাংশন
-function addCoinToTable(coin) {
-  const tableBody = document.querySelector('#coin-table tbody');
-  const row = document.createElement('tr');
-  row.innerHTML = `
-        <td>${coin.symbol}</td>
-        <td>${coin.higherHigh ? 'Yes' : 'No'}</td>
-        <td>${coin.lowerLow ? 'Yes' : 'No'}</td>
-    `;
-  tableBody.appendChild(row);
-
-  // ডাবল ক্লিক ইভেন্ট যোগ করুন
-  row.addEventListener('dblclick', () => {
-    openMexcAppChart(coin.symbol);
-  });
-}
-
-// সর্বোচ্চ ১৫টি কয়েন শো করার ফাংশন
-let displayedCoins = 0;
-const maxCoins = 5;
-
-async function fetchAllCoins() {
-  const status = document.getElementById('status');
-  status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> '; // Font Awesome আইকন
-
-  const symbols = await fetchFuturesSymbols();
-  if (!symbols) {
-    status.innerHTML = 'No Internet';
-    return;
-  }
-
-  // Time frame সিলেক্ট করুন
-  const timeframe = document.getElementById('timeframe').value;
-
-  for (const symbol of symbols) {
-    if (displayedCoins >= maxCoins) {
-      status.innerHTML = '';
-      break; // ১৫টি কয়েন শো হলে লুপ থামান
-    }
-
-    // ব্ল্যাকলিস্টেড কয়েন চেক করুন
-    if (blacklistedCoins.includes(symbol)) {
-      continue; // ব্ল্যাকলিস্টেড কয়েন স্কিপ করুন
-    }
-
-    try {
-      const candles = await fetchCandlestickData(symbol, timeframe);
-      if (!candles) continue;
-
-      const { higherHigh, lowerLow } = checkHigherHighLowerLow(candles);
-      if (higherHigh || lowerLow) {
-        addCoinToTable({ symbol, higherHigh, lowerLow });
-        displayedCoins++;
-      }
-    } catch (error) {
-      console.error(`Error processing ${symbol}:`, error);
-    }
-  }
-
-  if (displayedCoins === 0) {
-    status.innerHTML = 'No coin';
-  } else if (displayedCoins < maxCoins) {
-    status.innerHTML = '';
-  }
-}
-
-// টেবিল ক্লিয়ার করার ফাংশন
-function clearTable() {
-  const tableBody = document.querySelector('#coin-table tbody');
-  tableBody.innerHTML = '';
-  displayedCoins = 0; // কাউন্টার রিসেট করুন
-}
-
-// প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
-async function updateData() {
-  clearTable(); // টেবিল ক্লিয়ার করুন
-  await fetchAllCoins(); // নতুন ডেটা ফেচ করুন
-}
-
-// পেজ লোড হওয়ার সময় ডেটা ফেচ করুন
-document.addEventListener('DOMContentLoaded', updateData);
-
-// Time frame চেঞ্জ হলে ডেটা আপডেট করুন
-document.getElementById('timeframe').addEventListener('change', updateData);
-
-// প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
-setInterval(updateData, 300000);
-</script>
-
 <script>
-    // Dark Mode টগল ফাংশন
+  // ব্ল্যাকলিস্টেড কয়েন (এই কয়েনগুলি শো হবে না)
+  const blacklistedCoins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT', 'LTCUSDT'];
+
+  // Binance API থেকে সমস্ত Futures মার্কেট সিম্বল ফেচ করার ফাংশন
+  async function fetchFuturesSymbols() {
+    const url = 'https://fapi.binance.com/fapi/v1/exchangeInfo';
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const symbols = data.symbols
+        .filter(symbol => symbol.contractType === 'PERPETUAL') // শুধুমাত্র PERPETUAL Futures
+        .map(symbol => symbol.symbol);
+      return symbols;
+    } catch (error) {
+      console.error('API not load:', error);
+      return null;
+    }
+  }
+
+  // Binance API থেকে ক্যান্ডলস্টিক ডেটা ফেচ করার ফাংশন
+  async function fetchCandlestickData(symbol, interval = '1m', limit = 5) {
+    const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(`Error fetching data for ${symbol}:`, error);
+      return null;
+    }
+  }
+
+  // Higher High এবং Lower Low চেক করার ফাংশন
+  function checkHigherHighLowerLow(candles) {
+    let higherHigh = true;
+    let lowerLow = true;
+
+    for (let i = 1; i < candles.length; i++) {
+      if (candles[i][2] <= candles[i - 1][2]) { // Higher High চেক
+        higherHigh = false;
+      }
+      if (candles[i][3] >= candles[i - 1][3]) { // Lower Low চেক
+        lowerLow = false;
+      }
+    }
+
+    return { higherHigh, lowerLow };
+  }
+
+  // TradingView অ্যাপে চার্ট ওপেন করার ফাংশন
+  function openTradingViewAppChart(symbol) {
+    // শুধুমাত্র USDT পেয়ার চেক করুন
+    if (!symbol.endsWith('USDT')) {
+      console.error('শুধুমাত্র USDT পেয়ার সমর্থিত।');
+      return;
+    }
+
+    // TradingView অ্যাপের Deep Link ফরম্যাট
+    const baseUrl = 'tradingview://'; // TradingView অ্যাপের Deep Link
+    const coinPair = symbol.replace('_', ''); // MEXC সিম্বল ফরম্যাট (BTC_USDT -> BTCUSDT)
+    const url = `${baseUrl}chart/?symbol=MEXC:${coinPair}.P`; // 'P' যোগ করুন Perpetual Futures এর জন্য
+
+    // Deep Link ওপেন করার চেষ্টা করুন (বর্তমান ট্যাবে)
+    window.location.href = url;
+
+    // যদি অ্যাপ ইনস্টল না থাকে, তাহলে ব্যবহারকারীকে TradingView ওয়েবসাইটে রিডাইরেক্ট করুন (বর্তমান ট্যাবে)
+    setTimeout(() => {
+      window.location.href = `https://www.tradingview.com/chart/?symbol=MEXC:${coinPair}.P`;
+    }, 1000); // 1000ms পরে চেক করুন
+  }
+
+  // টেবিলে নতুন কয়েন যোগ করার ফাংশন
+  function addCoinToTable(coin) {
+    const tableBody = document.querySelector('#coin-table tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+    <td>${coin.symbol}</td>
+    <td>${coin.higherHigh ? 'Yes' : 'No'}</td>
+    <td>${coin.lowerLow ? 'Yes' : 'No'}</td>
+  `;
+    tableBody.appendChild(row);
+
+    // ডাবল ক্লিক ইভেন্ট যোগ করুন
+    row.addEventListener('dblclick', () => {
+      openTradingViewAppChart(coin.symbol);
+    });
+  }
+
+  // সর্বোচ্চ ১৫টি কয়েন শো করার ফাংশন
+  let displayedCoins = 0;
+  const maxCoins = 5;
+
+  async function fetchAllCoins() {
+    const status = document.getElementById('status');
+    status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> '; // Font Awesome আইকন
+
+    const symbols = await fetchFuturesSymbols();
+    if (!symbols) {
+      status.innerHTML = 'No Internet';
+      return;
+    }
+
+    // Time frame সিলেক্ট করুন
+    const timeframe = document.getElementById('timeframe').value;
+
+    for (const symbol of symbols) {
+      if (displayedCoins >= maxCoins) {
+        status.innerHTML = '';
+        break; // ১৫টি কয়েন শো হলে লুপ থামান
+      }
+
+      // ব্ল্যাকলিস্টেড কয়েন চেক করুন
+      if (blacklistedCoins.includes(symbol)) {
+        continue; // ব্ল্যাকলিস্টেড কয়েন স্কিপ করুন
+      }
+
+      try {
+        const candles = await fetchCandlestickData(symbol, timeframe);
+        if (!candles) continue;
+
+        const { higherHigh, lowerLow } = checkHigherHighLowerLow(candles);
+        if (higherHigh || lowerLow) {
+          addCoinToTable({ symbol, higherHigh, lowerLow });
+          displayedCoins++;
+        }
+      } catch (error) {
+        console.error(`Error processing ${symbol}:`, error);
+      }
+    }
+
+    if (displayedCoins === 0) {
+      status.innerHTML = 'No coin found';
+    } else if (displayedCoins < maxCoins) {
+      status.innerHTML = '';
+    }
+  }
+
+  // টেবিল ক্লিয়ার করার ফাংশন
+  function clearTable() {
+    const tableBody = document.querySelector('#coin-table tbody');
+    tableBody.innerHTML = '';
+    displayedCoins = 0; // কাউন্টার রিসেট করুন
+  }
+
+  // প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
+  async function updateData() {
+    clearTable(); // টেবিল ক্লিয়ার করুন
+    await fetchAllCoins(); // নতুন ডেটা ফেচ করুন
+  }
+
+  // পেজ লোড হওয়ার সময় ডেটা ফেচ করুন
+  document.addEventListener('DOMContentLoaded', updateData);
+
+  // Time frame চেঞ্জ হলে ডেটা আপডেট করুন
+  document.getElementById('timeframe').addEventListener('change', updateData);
+
+  // প্রতি 60 সেকেন্ডে ডেটা আপডেট করুন
+  setInterval(updateData, 60000);
+
+  // Dark Mode টগল ফাংশন
   function toggleDarkMode() {
     const body = document.body;
     const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -417,9 +422,9 @@ setInterval(updateData, 300000);
 
     // আইকন চেঞ্জ করুন
     if (body.classList.contains('dark-mode')) {
-      darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
+      darkModeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>'; // Light Mode আইকন
     } else {
-      darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+      darkModeToggle.innerHTML = '<i class="fa-regular fa-moon fa-fade"></i>'; // Dark Mode আইকন
     }
 
     // লোকাল স্টোরেজে Dark Mode স্টেট সেভ করুন
@@ -435,16 +440,16 @@ setInterval(updateData, 300000);
 
     if (darkMode) {
       body.classList.add('dark-mode');
-      darkModeToggle.innerHTML = '🌞'; // Light Mode আইকন
+      darkModeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>'; // Light Mode আইকন
     } else {
-      darkModeToggle.innerHTML = '🌙'; // Dark Mode আইকন
+      darkModeToggle.innerHTML = '<i class="fa-regular fa-moon fa-fade"></i>'; // Dark Mode আইকন
     }
   }
 
   // Dark Mode টগল বাটন যোগ করুন
   const darkModeToggleButton = document.createElement('button');
   darkModeToggleButton.id = 'dark-mode-toggle';
-  darkModeToggleButton.innerHTML = '🌙'; // ডিফল্ট আইকন
+  darkModeToggleButton.innerHTML = '<i class="fa-regular fa-moon fa-fade"></i>'; // ডিফল্ট আইকন
   darkModeToggleButton.addEventListener('click', toggleDarkMode);
   document.body.appendChild(darkModeToggleButton);
 
