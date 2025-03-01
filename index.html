@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/jpeg" sizes="32x32" href="a-minimalist-and-modern-favicon-for-a-cr_Ms5q_iSdSreCTljV5azHsA_cIH71f1XQda07kqUyiEPtg.jpeg">
     <link rel="shortcut icon" href="a-minimalist-and-modern-favicon-for-a-cr_Ms5q_iSdSreCTljV5azHsA_cIH71f1XQda07kqUyiEPtg.jpeg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,18 +20,16 @@ html, body {
 }
 
 body {
-
     font-family: "Oswald", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -47,7 +45,7 @@ body.light-mode {
 
 /* 🟣 ডার্ক মোড */
 body.dark-mode {
-    background-color: #0a0a0a; /* ডার্ক ব্যাকগ্রাউন্ড */
+    background: linear-gradient(160deg, #1B1B1B, #0C0505,#040F05);
     color: #ffffff;
 }
 
@@ -66,13 +64,12 @@ body.dark-mode {
 }
 
 .container:hover {
-    
     box-shadow: #7B5729 0px 2px 8px 0px;
 }
 
 /* 🌑 ডার্ক মোড কন্টেইনার */
 body.dark-mode .container {
-    background: rgba(30, 30, 47, 0.9); /* ডিপ ব্লু সলিড */
+    background: linear-gradient(160deg, #353C3E, #000000,#281C0D);
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.6); /* গা dark শ্যাডো */
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -84,7 +81,6 @@ h1 {
     color: #333333; /* সাদা মোডে গা dark কালো টেক্সট */
     transition: color 0.5s ease;
     animation: fadeIn 1s ease-in-out; /* এনিমেশন */
-    
     background: linear-gradient(to right, #FFE200, #8D5151,#4EFF00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
@@ -173,14 +169,13 @@ body.dark-mode #status {
     color: #FF5733;
     font-weight: 500;
     font-size: 14px;
-    
 }
 
 .card .volume {
     color: #3498DB;
     font-weight: 500;
-font-size: 14px;
-display: none
+    font-size: 14px;
+    display: none;
 }
 
 .card .trend {
@@ -197,8 +192,8 @@ display: none
 
 /* 🌑 ডার্ক মোড কার্ড */
 body.dark-mode .card {
-    background: rgba(30, 30, 47, 0.9);
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(150deg, #363939, #000000 ,#281122);
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
 
 body.dark-mode .card h3 {
@@ -206,7 +201,7 @@ body.dark-mode .card h3 {
 }
 
 body.dark-mode h1 {
-  background: linear-gradient(to right, #FFFFFF,#FFAA00,#DA00FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, #FFFFFF,#FFAA00,#DA00FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
 body.dark-mode .card p {
@@ -285,7 +280,7 @@ select {
 
 body.dark-mode select {
     background: rgba(30, 30, 47, 0.9);
-    border-color: #FF6B6B;
+    border-color: #5A5A5A;
     background: linear-gradient(to right, #FFFFFF,#00FF16,#FF0000); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     color: #E3DCDC;
     outline: none;
@@ -411,6 +406,9 @@ function checkHigherHighLowerLow(candles) {
 }
 
 // টেবিলে নতুন কয়েন যোগ করার ফাংশন (কার্ড আকারে)
+let tradingViewTab = null; // গ্লোবাল ভ্যারিয়েবল ট্যাবের রেফারেন্স সংরক্ষণ করার জন্য
+let tabTimestamp = null; // গ্লোবাল ভ্যারিয়েবল টাইমস্ট্যাম্প সংরক্ষণ করার জন্য
+
 function addCoinToTable(coin) {
   const cardContainer = document.querySelector('#coin-container');
   const card = document.createElement('div');
@@ -422,6 +420,22 @@ function addCoinToTable(coin) {
         <p class="trend ${coin.higherHigh ? 'long' : 'short'}">${coin.higherHigh ? 'LONG' : 'SHORT'}</p>
     `;
   cardContainer.appendChild(card);
+
+  // ডাবল ক্লিক ইভেন্ট লিসেনার যোগ করুন
+  card.addEventListener('dblclick', () => {
+    const tradingViewUrl = `https://www.tradingview.com/chart/?symbol=BINANCE:${coin.symbol}.p`;
+    const currentTime = Date.now();
+
+    // যদি ট্যাব খোলা থাকে এবং ১ ঘন্টার মধ্যে হয়, তাহলে একই ট্যাবে লোড করুন
+    if (tradingViewTab && !tradingViewTab.closed && currentTime - tabTimestamp < 3600000) {
+      tradingViewTab.location.href = tradingViewUrl;
+      tradingViewTab.focus();
+    } else {
+      // নতুন ট্যাবে চার্ট খুলুন এবং গ্লোবাল ভ্যারিয়েবল আপডেট করুন
+      tradingViewTab = window.open(tradingViewUrl, '_blank');
+      tabTimestamp = currentTime;
+    }
+  });
 }
 
 // সর্বোচ্চ ১৫টি কয়েন শো করার ফাংশন
